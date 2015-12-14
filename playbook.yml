@@ -1,0 +1,40 @@
+---
+- hosts: all
+  sudo: true
+  vars:
+    debian: "wheezy"
+    document_root: /vagrant/htdocs
+    php_version: "5.6"
+    apache_version: "2.2"
+    drush_tag: "8.0.0"
+    mysql_root_password: vagrant
+    fpm: false # Used together with nginx (true/false)
+
+  pre_tasks:
+    # Tasks that shold be runned before roles.
+
+  post_tasks:
+    # Tasks that shold be runned after roles.
+
+  roles:
+    # Installation tasks that all should used.
+    - apt
+    - common
+
+    # HTTP stack instllation (apache, mysql, nginx etc.).
+    - apache
+    - mysql
+    #- nginx
+
+    # PHP, composer and/or drush should be runned after
+    # apache/nginx installation to ensure that the right
+    # config is set for php.
+    - php
+    - composer
+    - drush
+
+    # Optional extras.
+    - mail_catcher
+    - nodejs
+    - gulp
+    - memcached
