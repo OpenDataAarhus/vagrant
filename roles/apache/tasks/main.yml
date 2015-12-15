@@ -1,0 +1,81 @@
+---
+- name: Install apache
+  apt: pkg={{ item }} update_cache=yes
+  with_items:
+    - apache2
+    - libapache2-mod-wsgi
+  tags: apache
+
+- name: Assures {{ document_root }} dir exists
+  file: path={{ document_root }} state=directory
+
+- name: Configure apache enviroment 2.2
+  replace:
+    dest=/etc/apache2/apache2.conf
+    regexp="{{ item.regexp }}"
+    replace="{{ item.replace }}"
+    backup=yes
+  with_items:
+    - { regexp: 'User ${APACHE_RUN_USER}', replace: 'User vagrant' }
+    - { regexp: 'Group ${APACHE_RUN_GROUP}', replace: 'Group vagrant' }
+  when: apache_version == "2.2"
+  notify:
+    - reload apache
+  tags: apache
+
+- name: Configure apache enviroment 2.4
+  replace:
+    dest=/etc/apache2/envvars
+    regexp="{{ item.regexp }}"
+    replace="{{ item.replace }}"
+    backup=yes
+  with_items:
+    - { regexp: 'export APACHE_RUN_USER=www-data', replace: 'export APACHE_RUN_USER=vagrant' }
+    - { regexp: 'export APACHE_RUN_GROUP=www-data', replace: 'export APACHE_RUN_GROUP=vagrant' }
+  when: apache_version == "2.4"
+  notify:
+    - reload apache
+  tags: apache
+
+- name: Copy across new virtual host
+  template:
+    src=virtual-hosts-{{ apache_version }}.conf.j2
+    dest=/etc/apache2/sites-available/vagrant.conf
+  notify:
+    - reload apache
+  tags: apache
+
+- name: Remove default virtual host
+  file:
+    path=/etc/apache2/sites-enabled/000-default
+    state=absent
+  notify:
+    - reload apache
+  tags: apache
+
+- name: Set port to 8080
+  template:
+    src=ports.conf.j2
+    dest=/etc/apache2/ports.conf
+  notify:
+    - reload apache
+  tags: apache
+
+- name: Enable new vagrant virtual host
+  file:
+    src=/etc/apache2/sites-available/vagrant.conf
+    dest=/etc/apache2/sites-enabled/vagrant.conf
+    state=link
+  notify:
+    - reload apache
+  tags: apache
+
+- name: Enable modules
+  apache2_module: state=present name={{ item }}
+  with_items:
+    - expires
+    - rewrite
+    - ssl
+  notify:
+    - reload apache
+  tags: apache

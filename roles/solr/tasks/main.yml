@@ -1,0 +1,15 @@
+---
+- name: Install solr packages
+  apt: pkg={{ item }} update_cache=yes
+  with_items:
+    - openjdk-7-jdk
+    - solr-jetty
+  tags: solr
+
+- name: Setup jetty config
+  template:
+    src=jetty.j2
+    dest=/etc/default/jetty
+  notify:
+    - reload jetty
+  tags: solr

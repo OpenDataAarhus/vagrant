@@ -1,0 +1,8 @@
+---
+- name: Install
+  apt: pkg=nginx state=latest update_cache=yes
+  tags: nginx
+
+- name: Ensure service is running
+  service: name=nginx state=started
+  tags: nginx
