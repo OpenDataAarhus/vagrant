@@ -4,7 +4,6 @@
   with_items:
     - git
     - htop
-    - locales-all
     - bash-completion
     - sudo
     - nmap

@@ -5,7 +5,7 @@
     debian: "wheezy"
     document_root: /vagrant/htdocs
     php_version: "5.6"
-    apache_version: "2.2"
+    apache_version: "2.4"
 
   pre_tasks:
     # Tasks that shold be runned before roles.
@@ -15,7 +15,6 @@
 
   roles:
     # Installation tasks that all should used.
-    - apt
     - common
 
     # HTTP stack instllation (apache, mysql, nginx etc.).
@@ -24,6 +23,7 @@
 
     - solr
     - postgres
+    - ckan
 
     # Optional extras.
     - nodejs

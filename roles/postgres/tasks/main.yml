@@ -2,7 +2,7 @@
 - name: Install postgres packages
   apt: pkg={{ item }} update_cache=yes
   with_items:
-    - postgresql-9.1
+    - postgresql
     - python-psycopg2
     - libpq5
   tags: postgres
@@ -16,7 +16,7 @@
 - name: Create database
   sudo: yes
   sudo_user: postgres
-  postgresql_db: name=ckan_default encoding='UTF-8' owner=ckan_default
+  postgresql_db: name=ckan_default encoding='UTF-8' template='template0' owner=ckan_default
   tags: postgres
 
 

@@ -1,0 +1,203 @@
+#
+# CKAN - Pylons configuration
+#
+# These are some of the configuration options available for your CKAN
+# instance. Check the documentation in 'doc/configuration.rst' or at the
+# following URL for a description of what they do and the full list of
+# available options:
+#
+# http://docs.ckan.org/en/ckan-2.2.2/configuration.html
+#
+# The %(here)s variable will be replaced with the parent directory of this file
+#
+
+[DEFAULT]
+
+# WARNING: *THIS SETTING MUST BE SET TO FALSE ON A PRODUCTION ENVIRONMENT*
+debug = false
+
+[server:main]
+use = egg:Paste#http
+host = 0.0.0.0
+port = 5000
+
+[app:main]
+use = egg:ckan
+full_stack = true
+cache_dir = /tmp/%(ckan.site_id)s/
+beaker.session.key = ckan
+ckan.tracking_enabled = true
+
+# This is the secret token that the beaker library uses to hash the cookie sent
+# to the client. `paster make-config` generates a unique value for this each
+# time it generates a config file.
+beaker.session.secret = 0b534650f882c6024367c453dfcf76ec
+
+# `paster make-config` generates a unique value for this each time it generates
+# a config file.
+app_instance_uuid = {1cfvd123-7e03-47c2-bbd8-9c0ecaagd670}
+
+# repoze.who config
+who.config_file = %(here)s/who.ini
+who.log_level = warning
+who.log_file = %(cache_dir)s/who_log.ini
+
+
+## Database Settings
+sqlalchemy.url = postgresql://ckan_default:vagrant@localhost/ckan_default
+
+ckan.datastore.write_url = postgresql://ckan_default:vagrant@localhost/datastore_default
+ckan.datastore.read_url = postgresql://datastore_default:vagrant@localhost/datastore_default
+
+
+## Site Settings
+
+ckan.site_url = http://odaa.vm
+ckan.views.default_views = recline_view pdf_view geojson_view geo_view
+
+## Authorization Settings
+
+ckan.auth.anon_create_dataset = false
+ckan.auth.create_unowned_dataset = false
+ckan.auth.create_dataset_if_not_in_organization = false
+ckan.auth.user_create_groups = false
+ckan.auth.user_create_organizations = false
+ckan.auth.user_delete_groups = false
+ckan.auth.user_delete_organizations = false
+ckan.auth.create_user_via_api = false
+ckan.auth.create_user_via_web = true
+ckan.auth.roles_that_cascade_to_sub_groups = admin
+ckan.setstateforpendingvalidation.user = ssfpvu
+
+## Search Settings
+
+ckan.site_id = default
+solr_url = http://127.0.0.1:8983/solr
+
+#ckan.simple_search = 1
+
+
+## Plugins Settings
+
+# Note: Add ``datastore`` to enable the CKAN DataStore
+#       Add ``datapusher`` to enable DataPusher
+#       Add ``pdf_preview`` to enable the resource preview for PDFs
+#		Add ``resource_proxy`` to enable resorce proxying and get around the
+#		same origin policy
+#ckan.plugins = stats text_preview recline_preview datapusher datastore
+#ckan.plugins = stats text_preview recline_preview datapusher datastore odaa setstateforpendingvalidation resource_proxy geo_view geojson_view googleanalytics
+
+
+
+## Front-End Settings
+ckan.site_title = CKAN
+ckan.site_logo = /base/images/ODAA.png
+ckan.site_description =
+ckan.favicon = /images/icons/ckan.ico
+ckan.gravatar_default = identicon
+ckan.preview.direct = png jpg gif
+ckan.preview.loadable = html htm rdf+xml owl+xml xml n3 n-triples turtle plain atom csv tsv rss txt json
+
+# package_hide_extras = for_search_index_only
+googleanalytics.id = UA-64371434-1
+googleanalytics.account = dkaarhuskommuneodaa
+googleanalytics.username = dkaarhuskommuneodaa@gmail.com
+googleanalytics.password = odaaodaa
+googleanalytics_resource_prefix = /downloads/
+googleanalytics.domain = auto
+googleanalytics.track_events = false
+googleanalytics.show_downloads = true
+
+#package_edit_return_url = http://another.frontend/dataset/<NAME>
+#package_new_return_url = http://another.frontend/dataset/<NAME>
+#ckan.recaptcha.publickey =
+#ckan.recaptcha.privatekey =
+#licenses_group_url = http://licenses.opendefinition.org/licenses/groups/ckan.json
+licenses_group_url = file:///usr/lib/ckan/default/src/ckan/ckanext/ckanext-odaa/ckanext/odaa/public/base/image/licenses.json
+#ckan.template_footer_end =
+
+
+## Internationalisation Settings
+ckan.locale_default = da_DK
+ckan.locale_order = en pt_BR ja it cs_CZ ca es fr el sv sr sr@latin no sk fi ru de pl nl bg ko_KR hu sa sl lv
+ckan.locales_offered =
+ckan.locales_filtered_out = en_GB
+
+
+## Feeds Settings
+
+ckan.feeds.authority_name =
+ckan.feeds.date =
+ckan.feeds.author_name =
+ckan.feeds.author_link =
+
+## Storage Settings
+
+# To enable local file storage:
+ofs.impl = pairtree
+ofs.storage_dir = /var/lib/ckan/default
+
+ckan.storage_path = /var/lib/ckan/default
+ckan.max_resource_size = 200
+#ckan.max_image_size = 2
+
+## Datapusher settings
+
+# Make sure you have set up the DataStore
+
+#ckan.datapusher.formats =
+ckan.datapusher.url = http://127.0.0.1:8800/
+
+## Activity Streams Settings
+
+#ckan.activity_streams_enabled = true
+#ckan.activity_list_limit = 31
+#ckan.activity_streams_email_notifications = true
+# ckan.email_notifications_since = 2 days
+
+
+## Email settings
+
+email_to = toan@aarhus.dk
+error_email_from = dkaarhuskommuneodaa@gmail.com
+smtp.server = localhost
+smtp.starttls = False
+#smtp.user = your_username@gmail.com
+#smtp.password = your_password
+#smtp.mail_from =
+
+
+## Logging configuration
+[loggers]
+keys = root, ckan, ckanext
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = WARNING
+handlers = console
+
+[logger_ckan]
+level = INFO
+qualname = ckan
+propagate = 0
+handlers = console
+
+[logger_ckanext]
+level = DEBUG
+qualname = ckanext
+propagate = 0
+handlers = console
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s] %(message)s

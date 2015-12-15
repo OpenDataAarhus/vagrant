@@ -9,20 +9,6 @@
 - name: Assures {{ document_root }} dir exists
   file: path={{ document_root }} state=directory
 
-- name: Configure apache enviroment 2.2
-  replace:
-    dest=/etc/apache2/apache2.conf
-    regexp="{{ item.regexp }}"
-    replace="{{ item.replace }}"
-    backup=yes
-  with_items:
-    - { regexp: 'User ${APACHE_RUN_USER}', replace: 'User vagrant' }
-    - { regexp: 'Group ${APACHE_RUN_GROUP}', replace: 'Group vagrant' }
-  when: apache_version == "2.2"
-  notify:
-    - reload apache
-  tags: apache
-
 - name: Configure apache enviroment 2.4
   replace:
     dest=/etc/apache2/envvars
@@ -53,14 +39,6 @@
     - reload apache
   tags: apache
 
-- name: Set port to 8080
-  template:
-    src=ports.conf.j2
-    dest=/etc/apache2/ports.conf
-  notify:
-    - reload apache
-  tags: apache
-
 - name: Enable new vagrant virtual host
   file:
     src=/etc/apache2/sites-available/vagrant.conf
@@ -76,6 +54,7 @@
     - expires
     - rewrite
     - ssl
+    - wsgi
   notify:
     - reload apache
   tags: apache
