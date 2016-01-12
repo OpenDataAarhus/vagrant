@@ -30,6 +30,12 @@
     dest=/etc/ckan/default/production.ini
   tags: ckan
 
+#- name: Copy licenses file
+#  template:
+#    src=licenses.json.j2
+#    dest=/usr/lib/ckan/default/src/ckan/ckanext/ckanext-odaa/ckanext/odaa/public/base/image/licenses.json
+#  tags: ckan
+
 - name: Solr conf
   file: path=/etc/solr/conf/schema.xml state=absent
   tags: ckan
