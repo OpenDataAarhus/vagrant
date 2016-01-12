@@ -43,5 +43,5 @@
   tags: ckan
 
 - name: Create data dir
-  file: path=/etc/some_directory state=directory mode=0775 owner=www-data group=www-data
+  file: path=/var/lib/ckan state=directory mode=0775 owner=www-data group=www-data
   tags: ckan
