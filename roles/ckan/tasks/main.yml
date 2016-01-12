@@ -15,6 +15,9 @@
 
 - name: Install
   apt: deb="/root/python-ckan.deb"
+  notify:
+    - reload apache
+    - reload nginx
   tags: ckan
 
 - name: Install python modules
