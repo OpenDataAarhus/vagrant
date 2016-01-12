@@ -41,3 +41,7 @@
 - name: Ckan db
   command: ckan db init
   tags: ckan
+
+- name: Create data dir
+  file: path=/etc/some_directory state=directory mode=0775 owner=www-data group=www-data
+  tags: ckan
